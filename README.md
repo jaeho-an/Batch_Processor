@@ -45,6 +45,7 @@ Quartz Scheduler를 이용한 주기적인 Batch 실행과 다중 DB 연동, 데
 
 ▶ Project Structure
 
+```text
 Batch
 ├── conf
 │   ├── application.yaml
@@ -122,6 +123,7 @@ Batch
 외부 시스템과 내부 시스템의 데이터를 조회한 후
 PK를 기준으로 데이터를 비교하여 변경 사항을 분류합니다.
 
+```text
 External DB
     ↓
 External User / Group 조회
