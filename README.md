@@ -10,11 +10,9 @@ Quartz Scheduler를 이용한 주기적인 Batch 실행과 다중 DB 연동, 데
 
 ▶ Project Overview
 
-본 프로젝트는 외부 시스템과 내부 시스템 간 사용자 및 부서 정보의
-데이터 정합성을 유지하기 위한 Batch 처리 구조를 구현한 프로젝트입니다.
+본 프로젝트는 외부 시스템과 내부 시스템 간 사용자 및 부서 정보의 데이터 정합성을 유지하기 위한 Batch 처리 구조를 구현한 프로젝트입니다.
 
 주요 기능은 다음과 같습니다.
-
 - 외부/내부 DB 사용자 정보 조회
 - 외부/내부 DB 부서 정보 조회
 - 사용자/부서 PK 기반 데이터 비교
@@ -120,8 +118,7 @@ Batch
 
 ▶ Batch Processing Flow
 
-외부 시스템과 내부 시스템의 데이터를 조회한 후
-PK를 기준으로 데이터를 비교하여 변경 사항을 분류합니다.
+외부 시스템과 내부 시스템의 데이터를 조회한 후 PK를 기준으로 데이터를 비교하여 변경 사항을 분류합니다.
 
 ```text
 External DB
@@ -144,10 +141,9 @@ Internal DB 반영
 처리 결과 집계 및 Logging
 
 
-▶ User Synchronization
+▶ User Synchronizer
 
-사용자 정보는 외부 시스템과 내부 시스템의 User ID를 기준으로
-데이터를 비교하여 동기화하도록 구성했습니다.
+사용자 정보는 외부 시스템과 내부 시스템의 User ID를 기준으로 데이터를 비교하여 동기화하도록 구성했습니다.
 
 1. External DB에서 사용자 목록 조회
 2. Internal DB에서 사용자 목록 조회
@@ -162,10 +158,9 @@ Internal DB 반영
 11. 처리 성공/실패 건수 집계
 
 
-▶ Group Synchronization
+▶ Group Synchronizer
 
-부서 정보 역시 사용자 동기화와 동일한 패턴으로 구성하여
-외부 시스템과 내부 시스템 간 데이터 정합성을 유지하도록 구현했습니다.
+부서 정보 역시 사용자 동기화와 동일한 패턴으로 구성하여 외부 시스템과 내부 시스템 간 데이터 정합성을 유지하도록 구현했습니다.
 
 1. External DB에서 부서 목록 조회
 2. Internal DB에서 부서 목록 조회
@@ -180,89 +175,70 @@ Internal DB 반영
 
 ▶ Quartz Scheduler
 
-Quartz Scheduler를 이용하여 사용자 및 부서 동기화 작업을
-주기적으로 실행하도록 구성했습니다.
+Quartz Scheduler를 이용하여 사용자 및 부서 동기화 작업을 주기적으로 실행하도록 구성했습니다.
 
-User Synchronization
-
+1. User Synchronizer
 - Job : userSyncJob
 - Trigger : userSyncTrigger
 - 실행 주기 : 10분마다
 
-Group Synchronization
-
+2. Group Synchronizer
 - Job : groupSyncJob
 - Trigger : groupSyncTrigger
 - 실행 주기 : 5분부터 10분 간격
 
-사용자와 부서 동기화 작업이 동시에 실행되지 않도록
-실행 시간을 분리하여 구성했습니다.
+사용자와 부서 동기화 작업이 동시에 실행되지 않도록 실행 시간을 분리하여 구성했습니다.
 
 
 ▶ Configuration
 
-실행 환경과 DB 접속 정보는 소스 코드와 분리하여
-외부 설정 파일에서 관리하도록 구성했습니다.
+실행 환경과 DB 접속 정보는 소스 코드와 분리하여 외부 설정 파일에서 관리하도록 구성했습니다.
 
-conf/application.yaml
-
+1. conf/application.yaml
 - External DB Connection
 - Internal DB Connection
 - MyBatis 설정
 - Logging 설정
 - Batch 실행 환경 설정
 
-conf/quartz_scheduler.xml
-
-- User Synchronization Job
-- Group Synchronization Job
+2. conf/quartz_scheduler.xml
+- User Synchronizer Job
+- Group Synchronizer Job
 - Trigger
 - Cron Expression
 
 
 ▶ External / Internal DB
 
-본 프로젝트는 서로 다른 시스템의 DB를 연동하는 상황을 고려하여
-External DB와 Internal DB를 분리하여 구성했습니다.
+본 프로젝트는 서로 다른 시스템의 DB를 연동하는 상황을 고려하여 External DB와 Internal DB를 분리하여 구성했습니다.
 
-External DB
-
+1. External DB
 - 연계 시스템에서 사용자 및 부서 정보를 조회
 - 원천 데이터 역할
 
-Internal DB
-
+2. Internal DB
 - 내부 시스템의 사용자 및 부서 정보 관리
 - 동기화 결과 반영
 
-이를 통해 외부 시스템의 변경 사항을 내부 시스템에
-주기적으로 반영하는 구조를 구현했습니다.
+이를 통해 외부 시스템의 변경 사항을 내부 시스템에 주기적으로 반영하는 구조를 구현했습니다.
 
 
 ▶ Data Consistency
 
-동기화 과정에서 데이터 정합성을 유지하기 위해
-각 데이터의 PK를 기준으로 비교하도록 구성했습니다.
+동기화 과정에서 데이터 정합성을 유지하기 위해 각 데이터의 PK를 기준으로 비교하도록 구성했습니다.
 
-User
-
-- User ID
-
-Group
-
-- Group ID
+User : User ID
+Group : Group ID
 
 PK를 기준으로 존재 여부를 먼저 확인한 후,
 기존 데이터에 대해서만 상세 필드의 변경 여부를 비교하도록 구성했습니다.
 
-이를 통해 신규 데이터와 기존 데이터의 처리 로직을 분리하고
-불필요한 UPDATE 작업을 최소화하도록 설계했습니다.
+이를 통해 신규 데이터와 기존 데이터의 처리 로직을 분리하고 불필요한 UPDATE 작업을 최소화하도록 설계했습니다.
 
 
 ▶ Exception Handling
 
-Batch 실행 중 발생할 수 있는 예외를 Logging하여
-운영 과정에서 장애 원인을 확인할 수 있도록 구성했습니다.
+Batch 실행 중 발생할 수 있는 예외를 Logging하여 운영 과정에서 장애 원인을 확인할 수 있도록 구성했습니다.
 
 - DB 조회 및 저장 과정의 Exception 처리
 - 사용자/부서 동기화 과정의 오류 Logging
@@ -270,8 +246,7 @@ Batch 실행 중 발생할 수 있는 예외를 Logging하여
 - Batch 전체 실행 실패 Logging
 - 처리 성공/실패 건수 집계
 
-오류 발생 시 Log를 기반으로 원인을 확인하고
-실패 데이터에 대한 재처리를 고려할 수 있도록 구성했습니다.
+오류 발생 시 Log를 기반으로 원인을 확인하고 실패 데이터에 대한 재처리를 고려할 수 있도록 구성했습니다.
 
 
 ▶ Logging
@@ -279,7 +254,6 @@ Batch 실행 중 발생할 수 있는 예외를 Logging하여
 Batch 실행 과정에서 주요 처리 상태를 Logging 합니다.
 
 예시:
-
 - Batch Start
 - User Synchronization Start
 - Group Synchronization Start
@@ -294,43 +268,26 @@ Batch 실행 과정에서 주요 처리 상태를 Logging 합니다.
 
 ▶ JAR Deployment
 
-Maven을 이용하여 Batch Application을 JAR 형태로 Build하고
-운영 환경에서 JAR 파일을 실행할 수 있도록 구성했습니다.
+Maven을 이용하여 Batch Application을 JAR 형태로 Build하고 운영 환경에서 JAR 파일을 실행할 수 있도록 구성했습니다.
 
 jar
 └── batch.jar
 
-외부 설정 파일을 사용하기 때문에 JAR 내부에 DB 접속 정보 등을
-직접 포함하지 않고 conf/application.yaml을 별도로 사용합니다.
-
+외부 설정 파일을 사용하기 때문에 JAR 내부에 DB 접속 정보 등을 직접 포함하지 않고 conf/application.yaml을 별도로 사용합니다.
 실행 시 다음 옵션을 이용하여 외부 설정 파일을 지정합니다.
-
 --spring.config.additional-location=optional:file:./conf/application.yaml
 
 
 ▶ Linux / Windows Execution
 
-Linux 환경
+1. Linux 환경
+실행: ./run.sh
+종료: ./stop.sh
 
-실행:
+2. Windows 환경
 
-./run.sh
-
-종료:
-
-./stop.sh
-
-
-Windows 환경
-
-실행:
-
-run.bat
-
-종료:
-
-stop.bat
-
+실행: run.bat
+종료: stop.bat
 
 실행 Script에서는 다음 작업을 수행합니다.
 
@@ -343,29 +300,9 @@ stop.bat
 - Batch Application 종료
 
 
-▶ Directory Management
-
-운영 환경에서 생성되는 PID 및 Log 파일은
-Git Repository에서 관리하지 않도록 구성했습니다.
-
-.gitignore
-
-/pid/
-/log/
-
-실제 운영 환경에서는 다음과 같이 생성됩니다.
-
-pid
-└── batch.pid
-
-log
-└── batch.log
-
-
 ▶ Project Purpose
 
-본 프로젝트를 통해 다음과 같은 Backend 및 Batch 개발 경험을
-개인 프로젝트 형태로 정리하고자 했습니다.
+본 프로젝트를 통해 다음과 같은 Backend 및 Batch 개발 경험을 개인 프로젝트 형태로 정리하고자 했습니다.
 
 1. Spring Boot 기반 Batch Application 구성
 2. Quartz Scheduler를 이용한 주기적인 작업 실행
