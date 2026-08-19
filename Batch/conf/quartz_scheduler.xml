@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<job-scheduling-data
+	xmlns="http://quartz-scheduler.org/xml/JobSchedulingData"
+	version="2.0">
+	
+	<schedule>
+	
+		<!-- ============================= -->
+		<!-- User -->
+		<!-- ============================= -->
+		
+		<job>
+			<name>userSyncJob</name>
+			<group>sync</group>
+			<description>사용자 정보 동기화</description>
+			
+			<job-class>
+				scheduler.UserSyncJob
+			</job-class>
+			
+			<durability>true</durability>
+		</job>
+		
+		<trigger>
+			<cron>
+				<name>userSyncTrigger</name>
+				<job-name>userSyncJob</job-name>
+				<job-group>sync</job-group>
+				<cron-expression>0 0/10 * * * ?</cron-expression>
+			</cron>
+		</trigger>
+		
+		<!-- ============================= -->
+		<!-- Group -->
+		<!-- ============================= -->
+		
+		<job>
+			<name>groupSyncJob</name>
+			<group>sync</group>
+			<description>부서 정보 동기화</description>
+			
+			<job-class>
+				scheduler.GroupSyncJob
+			</job-class>
+			
+			<durability>true</durability>
+		</job>
+		
+		<trigger>
+			<cron>
+				<name>groupSyncTrigger</name>
+				<job-name>groupSyncJob</job-name>
+				<job-group>sync</job-group>
+				<cron-expression>0 5/10 * * * ?</cron-expression>
+			</cron>
+		</trigger>
+		
+	</schedule>
+	
+</job-scheduling-data>

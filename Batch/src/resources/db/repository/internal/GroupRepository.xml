@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="repository.internal.GroupRepository">
+	
+	<select id="selectGroups" resultType="domain.Group">
+		SELECT
+			GROUP_ID, GROUP_NAME, STATUS
+		WHERE
+			GROUP_TBL
+		WHERE
+			IS_SYNC = 1
+	</select>
+	
+	<insert id="createGroup">
+		INSERT INTO GROUP_TBL (
+			GROUP_ID, GROUP_NAME, STATUS, CREATE_DATE, IS_SYNC
+		) VALUES (
+			#{groupId}, #{groupName}, #{status}, SYSDATE, 1
+		)
+	</insert>
+	
+	<update id="updateGroup">
+		UPDATE GROUP_TBL
+		SET
+			GROUP_NAME = #{groupName},
+			STATUS = #{status},
+			UPDATE_DATE = SYSDATE
+		WHERE
+			GROUP_ID = #{groupId}
+	</update>
+	
+	<update id="deleteGroup">
+		UPDATE GROUP_TBL
+		SET
+			STATUS = "UN_ACTIVE"
+		WEHRE
+			GROUP_ID = #{groupId}
+	</update>
+	
+</mapper>

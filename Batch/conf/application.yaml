@@ -1,0 +1,31 @@
+database:
+
+  external:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@//localhost:1521/EXTERNAL
+    username: external_user
+    password: external_password
+
+  internal:
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@//localhost:1521/INTERNAL
+    username: internal_user
+    password: internal_password
+
+
+mybatis:
+
+  external:
+    mapper-locations: classpath:/db/repository/external/*.xml
+
+  internal:
+    mapper-locations: classpath:/db/repository/internal/*.xml
+
+
+logging:
+
+  level:
+    root: INFO
+    repository: DEBUG
+    service: DEBUG
+    synchronizer: DEBUG

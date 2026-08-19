@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper namespace="repository.internal.UserRepository">
+	
+	<select id="selectUsers" resultType="domain.User">
+		SELECT
+			USER_ID, USER_NAME, PASSWORD, GROUP_ID,
+			EMAIL, PHONE
+		FROM
+			USER_TBL
+		WHERE
+			IS_SYNC = 1
+	</select>
+	
+	<insert id="createUser">
+		INSERT INTO USER_TBL (
+			USER_ID, USER_NAME, PASSWORD, GROUP_ID, EMAIL, PHONE, CREATE_DATE, IS_SYNC
+		) VALUES (
+			#{userId}, #{userName}, #{password}, #{groupId}, #{email}, #{phone}, SYSDATE, 1
+		)
+	</insert>
+	
+	<update id="updateUser">
+		UPDATE USER_TBL
+		SET
+			USER_NAME = #{userName},
+			PASSWORD = #{password},
+			GROUP_ID = #{groupId},
+			EMAIL = #{email},
+			PHONE = #{phone},
+			UPDATE_DATE = #{updateDate}
+		WHERE
+			USER_ID = #{userId}
+	</update>
+	
+	<update id="deleteUser">
+		UPDATE USER_TBL
+		SET
+			EMPLOY_STATUS = "RETIRED"
+		WHERE
+			USER_ID = #{userId}
+	</update>
+	
+</mapper>
