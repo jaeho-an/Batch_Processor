@@ -346,3 +346,8 @@ jar
                     │
                     ▼
               Logging / PID
+
+
+▶ Author
+
+안재호 JAVA Backend Developer
